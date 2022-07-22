@@ -1,15 +1,21 @@
 // "use strict";
 import express from "express";
+import { request } from "https";
 
 const app = express();
 const port = 4000;
 const path = require("path");
+const fs = require("fs");
+const url = require("url");
+
 const imagePath = (filename: string): string => {
   const imageSrc = path.join(__dirname, `./assets/${filename}.jpg`);
+
   return imageSrc;
 };
 
 const uploadImage = require("sharp");
+
 app.get(
   "/image/:filename?:width?:height?",
   (req: express.Request, res: express.Response) => {
@@ -32,10 +38,7 @@ const transformImage = async (
   await uploadImage(imageSrc)
     .resize(parseInt(width), parseInt(height))
     .toFile(
-      `src/thumb/${filename}_thumb.jpg`,
-      (error: unknown, info: unknown) => {
-        console.log(error, info);
-      }
+      `src/thumb/${filename}_thumb.jpg`
     );
 };
 app.listen(port, () => {
