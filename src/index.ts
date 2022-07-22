@@ -38,7 +38,8 @@ const transformImage = async (
   await uploadImage(imageSrc)
     .resize(parseInt(width), parseInt(height))
     .toFile(
-      `src/thumb/${filename}_thumb.jpg`
+      `src/thumb/${filename}_thumb.jpg`,
+
     );
 };
 app.listen(port, () => {
