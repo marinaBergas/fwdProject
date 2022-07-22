@@ -1,6 +1,5 @@
 // "use strict";
 import express from "express";
-import { request } from "https";
 
 const app = express();
 const port = 4000;
