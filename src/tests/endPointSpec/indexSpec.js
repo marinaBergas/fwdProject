@@ -19,7 +19,7 @@ const index_1 = __importDefault(require("../../index"));
 const request = (0, supertest_1.default)(index_1.default.app);
 describe('Test endpoint responses', () => {
     it('gets the api image endpoint', () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield request.get('/image?');
+        const response = yield request.get('/image?filename=icelandwaterfall&width=200&height=600');
         expect(response.status).toBe(200);
     }));
 });

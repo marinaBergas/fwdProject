@@ -16,44 +16,29 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
 const port = 4000;
-const imageSrc = "/home/oie/fwd/eslint/src/assets/favicon.png";
-const sharp = require("sharp");
+const path = require("path");
+const imagePath = (filename) => {
+    const imageSrc = path.join(__dirname, `./assets/${filename}.jpg`);
+    return imageSrc;
+};
+const uploadImage = require("sharp");
 app.get("/image/:filename?:width?:height?", (req, res) => {
-    const image = res.sendFile(imageSrc);
     let width = req.query.width;
     let height = req.query.height;
-    transformImage(width, height);
-    // sharp(imageSrc)
-    //   .resize(parseInt(width), parseInt(height))
-    //   .toFile(`src/assets/image-${width}-${height}.png`, (error: unknown, info: unknown) => {
-    //     console.log(error, info);
-    //   });
+    let filename = req.query.filename;
+    const imageSrc = imagePath(filename);
+    const image = res.sendFile(imageSrc);
+    transformImage(width, height, filename);
 });
-const transformImage = (width, height) => __awaiter(void 0, void 0, void 0, function* () {
-    yield sharp(imageSrc)
+const transformImage = (width, height, filename) => __awaiter(void 0, void 0, void 0, function* () {
+    const imageSrc = imagePath(filename);
+    yield uploadImage(imageSrc)
         .resize(parseInt(width), parseInt(height))
-        .toFile(`src/assets/image-${width}-${height}.png`, (error, info) => {
+        .toFile(`src/thumb/${filename}_thumb.jpg`, (error, info) => {
         console.log(error, info);
     });
-    // sharp(imageSrc)
-    // .rotate()
-    // .resize(parseInt(width), parseInt(height))
-    // .jpeg({ mozjpeg: true })
-    // .toBuffer()
-    // .then(( info: unknown) => { console.log(info) })
-    // .catch( (error: unknown) => {console.log(error) });
 });
-// app.get('/api',(req,res)=>{
-//     res.send("hello,world");
-// });
 app.listen(port, () => {
     console.log(`listening on http://localhost:${port}`);
 });
-// import express from 'express';
-// const app=express();
-// const port=6000;
-// app.get('/api',(req,res)=>{
-//     res.send("hello,world");
-// });
-//  app.listen(port,()=>console.log(`listening on port ${port}`));
 exports.default = { app, transformImage };

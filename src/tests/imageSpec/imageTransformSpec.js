@@ -14,15 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const index_1 = __importDefault(require("../../index"));
 describe("image transform result", () => {
-    it("gets the sharp test", () => __awaiter(void 0, void 0, void 0, function* () {
-        yield index_1.default.transformImage('20', "300").then(data => {
-            expect(function () {
-                index_1.default.transformImage('20', "300");
-            }).not.toThrowError("error ");
-        }, error => {
-            expect(function () {
-                index_1.default.transformImage('20', "300");
-            }).toThrow(error);
-        });
+    it("expect transform to not throw error", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield index_1.default.transformImage('20', "300", 'icelandwaterfall');
+        expect(function () { res; }).not.toThrow("error");
+    }));
+    it("expect transform to throw error", () => __awaiter(void 0, void 0, void 0, function* () {
+        const res = yield index_1.default.transformImage('20', "300", 'test');
+        expect(function () { throw new Error("there is an error"); }).toThrow();
     }));
 });
