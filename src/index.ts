@@ -3,16 +3,16 @@ import express from 'express';
 
 const app = express();
 const port = 4000;
-const path = require('path');
-
-
-const imagePath = (filename: string): string => {
-  const imageSrc = path.join(__dirname,`./assets/${filename}.jpg`);
-
+import path = require('path');
+const imagePath = (directPath: string): string => {
+  const imageSrc = path.join(__dirname, directPath);
   return imageSrc;
 };
 
-const uploadImage = require('sharp');
+import uploadImage = require('sharp');
+const resizeImage=()=>{
+  
+}
 const transformImage = async (
   width: string,
   height: string,
@@ -20,13 +20,11 @@ const transformImage = async (
   res: express.Response
 ) => {
   try {
-    const upload = await uploadImage(
-      path.join(__dirname, `./assets/${filename}.jpg`)
-    )
+    const upload = await uploadImage(imagePath(`./assets/${filename}.jpg`))
       .resize(parseInt(width), parseInt(height))
-      .toFile(path.join(__dirname, `./thumb/${filename}_thumb.jpg`));
-    const imageSrc = path.join(__dirname, `./thumb/${filename}_thumb.jpg`);
-    const image = res.sendFile(imageSrc);
+      .toFile(imagePath(`./thumb/${filename}_thumb.jpg`));
+    const imageSrc = imagePath(`./thumb/${filename}_thumb.jpg`);
+    res.sendFile(imageSrc);
   } catch (error) {
     console.error('error', 'you must write filename and width and height');
     res.send(`<h1>you must write filename and width and height</h1>`);
@@ -34,10 +32,10 @@ const transformImage = async (
 };
 app.get(
   '/image/:filename?:width?:height?',
-  (req: express.Request, res: express.Response, next) => {
-    let width: string = req.query.width as string;
-    let height: string = req.query.height as string;
-    let filename: string = req.query.filename as string;
+  (req: express.Request, res: express.Response) => {
+    const width: string = req.query.width as string;
+    const height: string = req.query.height as string;
+    const filename: string = req.query.filename as string;
 
     transformImage(width, height, filename, res);
   }

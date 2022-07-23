@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.ts",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint 'src/index.ts'",
@@ -23,6 +22,7 @@
     "@types/jasmine": "^4.0.3",
     "@types/lodash": "^4.14.182",
     "@types/node": "^18.0.3",
+    "@types/sharp": "^0.30.4",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "babel-eslint": "^10.1.0",
