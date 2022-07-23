@@ -14,17 +14,26 @@ const imagePath = (filename: string): string => {
 };
 
 const uploadImage = require("sharp");
-
+const resizeImage = async (
+  width: string,
+  height: string,
+  filename: string,
+  res: express.Response
+) => {
+  await uploadImage(path.join(__dirname, `./assets/${filename}.jpg`))
+    .resize(parseInt(width), parseInt(height))
+    .toFile(path.join(__dirname, `./resizedImage/${filename}.jpg`));
+  const imageSrc = path.join(__dirname, `./resizedImage/${filename}.jpg`);
+  const image = res.sendFile(imageSrc);
+  transformImage(width, height, filename);
+};
 app.get(
   "/image/:filename?:width?:height?",
   (req: express.Request, res: express.Response) => {
     let width: string = req.query.width as string;
     let height: string = req.query.height as string;
     let filename: string = req.query.filename as string;
-    const imageSrc = imagePath(filename);
-    const image = res.sendFile(imageSrc);
-
-    transformImage(width, height, filename);
+    resizeImage(width, height, filename, res);
   }
 );
 
@@ -36,10 +45,7 @@ const transformImage = async (
   const imageSrc = imagePath(filename);
   await uploadImage(imageSrc)
     .resize(parseInt(width), parseInt(height))
-    .toFile(
-      `src/thumb/${filename}_thumb.jpg`,
-
-    );
+    .toFile(`src/thumb/${filename}_thumb.jpg`);
 };
 app.listen(port, () => {
   console.log(`listening on http://localhost:${port}`);
