@@ -14,7 +14,7 @@ const imagePath = (filename: string): string => {
 };
 
 const uploadImage = require("sharp");
-const resizeImage = async (
+const transformImage = async (
   width: string,
   height: string,
   filename: string,
@@ -22,10 +22,9 @@ const resizeImage = async (
 ) => {
   await uploadImage(path.join(__dirname, `./assets/${filename}.jpg`))
     .resize(parseInt(width), parseInt(height))
-    .toFile(path.join(__dirname, `./resizedImage/${filename}.jpg`));
-  const imageSrc = path.join(__dirname, `./resizedImage/${filename}.jpg`);
+    .toFile(path.join(__dirname, `./thumb/${filename}_thumb.jpg`));
+  const imageSrc = path.join(__dirname, `./thumb/${filename}_thumb.jpg`);
   const image = res.sendFile(imageSrc);
-  transformImage(width, height, filename);
 };
 app.get(
   "/image/:filename?:width?:height?",
@@ -33,20 +32,10 @@ app.get(
     let width: string = req.query.width as string;
     let height: string = req.query.height as string;
     let filename: string = req.query.filename as string;
-    resizeImage(width, height, filename, res);
+    transformImage(width, height, filename, res);
   }
 );
 
-const transformImage = async (
-  width: string,
-  height: string,
-  filename: string
-) => {
-  const imageSrc = imagePath(filename);
-  await uploadImage(imageSrc)
-    .resize(parseInt(width), parseInt(height))
-    .toFile(`src/thumb/${filename}_thumb.jpg`);
-};
 app.listen(port, () => {
   console.log(`listening on http://localhost:${port}`);
 });
